@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Mobile APE</string>
+	<string name="sentences_file_name">sentences.txt</string>
+	<string name="app_author">Kaarel Kaljurand</string>
+	<string name="template_user_agent" translatable="false">"%1$s/%2$s (Linux; Android)"</string>
+	<string name="apews_url_base">http://attempto.ifi.uzh.ch/ws/ape/apews.perl</string>
+	<string name="apewsalpha_url_base">http://attempto.ifi.uzh.ch/ws/ape-alpha/apews.perl</string>
+	<string name="acetext_example_1">Is an android a human?</string>
+	<string name="acetext_example_2">Every man that is employed by a company that is rich and nice owns a fast car.</string>
+	
+	<!-- Menu -->
+	<string name="parse">Parse</string>
+	<string name="example">Example</string>
+	<string name="save_text">Save</string>
+	<string name="show_texts">Show</string>
+	<string name="about">About</string>
+
+	<string name="output_parameters">Output</string>	
+	<string name="drspp">drspp</string>
+	<string name="paraphrase">paraphrase</string>
+	<string name="owlfsspp">owlfsspp</string>
+	<string name="syntaxpp">syntaxpp</string>
+	
+	<string name="settings">Settings</string>	
+	<string name="guess">Guess unknown words</string>
+	<string name="noclex">Do not use Clex</string>
+</resources>

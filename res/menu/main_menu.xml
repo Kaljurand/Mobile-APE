@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/parse"
+          android:icon="@drawable/android_focused"
+          android:title="@string/parse" />
+
+    <item android:id="@+id/example"
+          android:title="@string/example" />
+
+ 	<item android:id="@+id/output_parameters"
+ 		android:icon="@drawable/outputs"
+		android:title="@string/output_parameters" >
+ 		<menu>
+ 			<group android:checkableBehavior="single">
+				<item android:id="@+id/drspp"
+                	  android:title="@string/drspp" />
+            	<item android:id="@+id/paraphrase"
+                	  android:title="@string/paraphrase" />
+				<item android:id="@+id/owlfsspp"
+                	  android:title="@string/owlfsspp" />
+				<item android:id="@+id/syntaxpp"
+                	  android:title="@string/syntaxpp" />
+			</group>
+		</menu>
+	</item>
+	
+    <item android:id="@+id/save_text"
+          android:title="@string/save_text" />
+          
+	<item android:id="@+id/show_texts"
+          android:title="@string/show_texts" />
+
+ 	<item
+ 		android:id="@+id/settings"
+		android:title="@string/settings" >
+ 		<menu>
+ 			<group android:checkableBehavior="all">
+				<item android:id="@+id/guess"
+                	  android:title="@string/guess" />
+            	<item android:id="@+id/noclex"
+                	  android:title="@string/noclex" />
+			</group>
+		</menu>
+	</item>
+
+    <item android:id="@+id/about"
+          android:title="@string/about" />
+
+</menu>
