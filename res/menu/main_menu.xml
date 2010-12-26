@@ -18,6 +18,8 @@
                 	  android:title="@string/paraphrase" />
 				<item android:id="@+id/owlfsspp"
                 	  android:title="@string/owlfsspp" />
+				<item android:id="@+id/tptp"
+                	  android:title="@string/tptp" />
 				<item android:id="@+id/syntaxpp"
                 	  android:title="@string/syntaxpp" />
 			</group>

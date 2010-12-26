@@ -128,6 +128,9 @@ public class MobileApe extends Activity {
 		case R.id.owlfsspp:
 			setSoloType(item);
 			return true;
+		case R.id.tptp:
+			setSoloType(item);
+			return true;
 		case R.id.syntaxpp:
 			setSoloType(item);
 			return true;
