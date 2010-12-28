@@ -11,6 +11,9 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		
+		<activity android:name=".ShowAbout" android:label="@string/activity_showabout_name">
+		</activity>
 
 	</application>
 

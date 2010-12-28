@@ -13,6 +13,7 @@ import ch.uzh.ifi.attempto.ape.Message;
 import ch.uzh.ifi.attempto.ape.OutputType;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -31,7 +32,7 @@ import android.widget.Toast;
 
 /**
  * TODO: SharedPreferences settings = getPreferences(0);
- * TODO: it seems that ACEParserException is never thrown
+ * TODO: it seems that ACEParserException is never thrown (on the emulator)
  * TODO: there seems to be some problem with jdom (maybe this is the cause of the previous problem)
  * 
  * @author Kaarel Kaljurand
@@ -109,7 +110,9 @@ public class MobileApe extends Activity {
 			edittext.setText(getString(R.string.acetext_example_2));
 			return true;
 		case R.id.about:
-			showMessage(getAboutString());
+			Intent intent = new Intent(this, ShowAbout.class);
+			startActivity(intent);
+			//showMessage(getAboutString());
 			return true;
 		case R.id.save_text:
 			if (isStorageWritable()) {

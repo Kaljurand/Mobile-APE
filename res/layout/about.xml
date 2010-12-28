@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_weight="1">
+    <TextView
+        android:text="@string/app_name"
+        android:textSize="10pt"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+	<!-- BUG: How to fetch data from the Manifest? -->
+    <TextView
+        android:text="[BUG: version]"
+        android:textSize="10pt"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+    <!-- BUG: How to concat strings: "by @string/app_author" does not work -->
+    <TextView
+        android:text="@string/app_author"
+        android:textSize="10pt"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+	<!-- BUG: How to set background color: android:color doesn't work -->
+    <TextView
+        android:text="Thank you for using Mobile APE!"
+        android:textSize="12pt"
+        android:background="#ddddff"
+        android:gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+ </LinearLayout>

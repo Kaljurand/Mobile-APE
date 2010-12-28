@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Mobile APE</string>
+	<string name="activity_showabout_name">About</string>
 	<string name="sentences_file_name">sentences.txt</string>
 	<string name="app_author">Kaarel Kaljurand</string>
 	<string name="template_user_agent" translatable="false">"%1$s/%2$s (Linux; Android)"</string>
