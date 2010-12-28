@@ -6,13 +6,16 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import ch.uzh.ifi.attempto.mobileape.MobileApeHelper.ApiException;
+import ch.uzh.ifi.attempto.ape.ACEParser;
+import ch.uzh.ifi.attempto.ape.ACEParserException;
+import ch.uzh.ifi.attempto.ape.APEWebservice;
+import ch.uzh.ifi.attempto.ape.Message;
+import ch.uzh.ifi.attempto.ape.OutputType;
 
 import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -28,6 +31,8 @@ import android.widget.Toast;
 
 /**
  * TODO: SharedPreferences settings = getPreferences(0);
+ * TODO: it seems that ACEParserException is never thrown
+ * TODO: there seems to be some problem with jdom (maybe this is the cause of the previous problem)
  * 
  * @author Kaarel Kaljurand
  */
@@ -61,7 +66,7 @@ public class MobileApe extends Activity {
 				if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
 						(keyCode == KeyEvent.KEYCODE_ENTER)) {
 					// Perform action on key press
-					showMessage(edittext.getText().toString());
+					//showMessage(edittext.getText().toString());
 					parseAndShow(edittext.getText().toString(), soloType);
 					return true;
 				}
@@ -153,50 +158,18 @@ public class MobileApe extends Activity {
 	}
 
 
-	private String getApeResult(String text, String soloType) throws ApiException {
-		String urlBase = getString(R.string.apews_url_base);
-		MobileApeHelper.prepareUserAgent(this);
-		String encodedText = Uri.encode(text);
-		String guessAsString = "off";
-		String noclexAsString = "off";
-		if (guess) {
-			guessAsString = "on";
-		}
-		if (noclex) {
-			noclexAsString = "on";
-		}
-		String expandClause = "&solo=" + soloType + "&guess=" + guessAsString + "&noclex=" + noclexAsString;
-		//String finalUrl = String.format(urlBase + "?text=", encodedText, expandClause);
-		String finalUrl = urlBase + "?text=" + encodedText + expandClause;
-		Log.i("Simple APE client", finalUrl);
-		return MobileApeHelper.getUrlContent(finalUrl);
-	}
-
-
-	/*
-	private String getSoloType() {
-		String soloType = "drspp";
-
-		RadioGroup radiogroup_solo = (RadioGroup) findViewById(R.id.radiogroup_solo);
-		if (radiogroup_solo != null) {
-			int radiobuttonId = radiogroup_solo.getCheckedRadioButtonId();
-			if (radiobuttonId != -1) {
-				RadioButton radioSelected = (RadioButton) findViewById(radiobuttonId);
-				soloType = radioSelected.getText().toString();
-			}
-		}
-		return soloType;
-	}
-	 */
-
-
 	private void parseAndShow(String text, String soloType) {
 		String apeOutput = "";
+		OutputType outputType = OutputType.valueOf(soloType.toUpperCase());
 
 		try {
-			apeOutput = getApeResult(text, soloType);
-		} catch (ApiException e) {
-			apeOutput = "ERROR: " + e.getMessage();
+			apeOutput = getApeResult(text, outputType);
+		} catch (ACEParserException e) {
+			for (Message m : e.getMessageContainer().getMessages()) {
+				apeOutput += m.getType() + ": " + m.getValue() + "\n";
+			}
+		} catch (RuntimeException rte) {
+			apeOutput = "API ERROR: " + rte.getMessage();
 		}
 
 		textview.setText(apeOutput + "\n====\n" + textview.getText().toString());
@@ -284,10 +257,6 @@ public class MobileApe extends Activity {
 	}
 
 
-	/**
-	 * 
-	 * @return
-	 */
 	private String showTexts() {
 		File root = Environment.getExternalStorageDirectory();
 
@@ -365,5 +334,31 @@ public class MobileApe extends Activity {
 			Log.e("MobileApe", "Couldn't find package information in PackageManager", e);
 		}
 		return null;
+	}	
+
+
+	private String getApeResult(String aceText, OutputType outputType) throws ACEParserException {
+		ACEParser ap = new APEWebservice(getString(R.string.apews_url_base));
+		ap.setClexEnabled(! noclex);
+		ap.setGuessingEnabled(guess);
+		ap.setURI(getString(R.string.ape_param_uri));
+		return ap.getSoloOutput(aceText, outputType);
 	}
+
+
+	/*
+	private String getSoloType() {
+		String soloType = "drspp";
+
+		RadioGroup radiogroup_solo = (RadioGroup) findViewById(R.id.radiogroup_solo);
+		if (radiogroup_solo != null) {
+			int radiobuttonId = radiogroup_solo.getCheckedRadioButtonId();
+			if (radiobuttonId != -1) {
+				RadioButton radioSelected = (RadioButton) findViewById(radiobuttonId);
+				soloType = radioSelected.getText().toString();
+			}
+		}
+		return soloType;
+	}
+	 */
 }

@@ -6,6 +6,7 @@
 	<string name="template_user_agent" translatable="false">"%1$s/%2$s (Linux; Android)"</string>
 	<string name="apews_url_base">http://attempto.ifi.uzh.ch/ws/ape/apews.perl</string>
 	<string name="apewsalpha_url_base">http://attempto.ifi.uzh.ch/ws/ape-alpha/apews.perl</string>
+	<string name="ape_param_uri">http://www.example.net/test</string>
 	<string name="acetext_example_1">Is an android a human?</string>
 	<string name="acetext_example_2">Every man that is employed by a company that is rich and nice owns a fast car.</string>
 	

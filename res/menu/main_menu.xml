@@ -4,9 +4,6 @@
           android:icon="@drawable/android_focused"
           android:title="@string/parse" />
 
-    <item android:id="@+id/example"
-          android:title="@string/example" />
-
  	<item android:id="@+id/output_parameters"
  		android:icon="@drawable/outputs"
 		android:title="@string/output_parameters" >
@@ -25,7 +22,10 @@
 			</group>
 		</menu>
 	</item>
-	
+
+    <item android:id="@+id/example"
+          android:title="@string/example" />
+
     <item android:id="@+id/save_text"
           android:title="@string/save_text" />
           
