@@ -1,8 +1,6 @@
 package ch.uzh.ifi.attempto.mobileape;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -38,6 +36,8 @@ import android.widget.Toast;
  * @author Kaarel Kaljurand
  */
 public class MobileApe extends Activity {
+
+	private static final int SNIPPET_SELECTED = 1;
 
 	private EditText edittext = null;
 	private TextView textview = null;
@@ -115,16 +115,13 @@ public class MobileApe extends Activity {
 			//showMessage(getAboutString());
 			return true;
 		case R.id.save_text:
-			if (isStorageWritable()) {
+			if (Utils.isStorageWritable()) {
 				saveText(edittext.getText().toString());
 			}
 			return true;
 		case R.id.show_texts:
-			if (isStorageReadable()) {
-				String texts = showTexts();
-				if (texts != null) {
-					textview.setText(texts);
-				}
+			if (Utils.isStorageReadable()) {
+				startActivityForResult(new Intent(this, SnippetListView.class), SNIPPET_SELECTED);
 			}
 			return true;
 		case R.id.drspp:
@@ -154,6 +151,21 @@ public class MobileApe extends Activity {
 	}
 
 
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {     
+		super.onActivityResult(requestCode, resultCode, data); 
+		switch(requestCode) { 
+		case (SNIPPET_SELECTED) : { 
+			if (resultCode == Activity.RESULT_OK) {
+				String selectedText = data.getStringExtra(SnippetListView.SELECTED_SNIPPET_EXTRA);
+				parseAndShow(selectedText, soloType);
+			} 
+			break;
+		} 
+		} 
+	}
+
+
 	private boolean flip(MenuItem item) {
 		boolean b = ! item.isChecked();
 		item.setChecked(b);
@@ -169,7 +181,7 @@ public class MobileApe extends Activity {
 			apeOutput = getApeResult(text, outputType);
 		} catch (ACEParserException e) {
 			for (Message m : e.getMessageContainer().getMessages()) {
-				apeOutput += m.getType() + ": " + m.getValue() + "\n";
+				apeOutput += formatMessage(m) + "\n";
 			}
 		} catch (RuntimeException rte) {
 			apeOutput = "API ERROR: " + rte.getMessage();
@@ -179,10 +191,9 @@ public class MobileApe extends Activity {
 	}
 
 
-	private String getAboutString() {
-		return getString(R.string.app_name) + " v" + getVersionName() + " by " + getString(R.string.app_author);
+	private String formatMessage(Message m) {
+		return m.getType() + ": sentence " + m.getSentenceId() + " token " + m.getTokenId() + ": " + m.getValue() + ": " + m.getRepair();
 	}
-
 
 	private void setSoloType(MenuItem item) {
 		if (item.isChecked()) {
@@ -192,42 +203,6 @@ public class MobileApe extends Activity {
 			item.setChecked(true);
 			soloType = item.getTitle().toString();
 		}
-	}
-
-
-	private boolean isStorageWritable() {
-		boolean mExternalStorageAvailable = false;
-		boolean mExternalStorageWriteable = false;
-		String state = Environment.getExternalStorageState();
-
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			// We can read and write the media
-			mExternalStorageAvailable = mExternalStorageWriteable = true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			// We can only read the media
-			mExternalStorageAvailable = true;
-			mExternalStorageWriteable = false;
-		} else {
-			// Something else is wrong. It may be one of many other states, but all we need
-			//  to know is we can neither read nor write
-			mExternalStorageAvailable = mExternalStorageWriteable = false;
-		}
-		//Toast.makeText(TransAnd.this, "SD: available: " + mExternalStorageAvailable + "; writable: " + mExternalStorageWriteable, Toast.LENGTH_LONG).show();
-
-		return (mExternalStorageAvailable && mExternalStorageWriteable);
-	}
-
-
-	private boolean isStorageReadable() {
-		boolean mExternalStorageAvailable = false;
-		String state = Environment.getExternalStorageState();
-
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			mExternalStorageAvailable = true;
-		} else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			mExternalStorageAvailable = true;
-		}
-		return mExternalStorageAvailable;
 	}
 
 
@@ -243,51 +218,16 @@ public class MobileApe extends Activity {
 
 		String fileName = appDirName + "/" + getString(R.string.sentences_file_name);
 		File sentencesFile = new File(fileName);
-		if (! sentencesFile.exists()) {
-			showMessage("File does not exist: " + sentencesFile.getAbsolutePath());
-		}
-
 
 		try {
 			FileOutputStream fos = new FileOutputStream(sentencesFile, true);
 			fos.write(text.getBytes());
-			fos.write("\n----\n".getBytes());
+			fos.write("\n".getBytes());
 			fos.close();
 			showMessage("Appended to: " + sentencesFile.getAbsolutePath());
 		} catch (IOException e) {
 			showException(e);
 		}
-	}
-
-
-	private String showTexts() {
-		File root = Environment.getExternalStorageDirectory();
-
-		String appDirName = root + "/Android/data/" + getPackageName() + "/files";
-
-		/*
-		File appDir = new File(appDirName);
-		if (! appDir.exists()) {
-			showMessage("appDir does not exist: " + appDir.getAbsolutePath());
-			return null;
-		}
-		 */
-
-		String fileName = appDirName + "/" + getString(R.string.sentences_file_name);
-		File sentencesFile = new File(fileName);
-		if (! sentencesFile.exists()) {
-			showMessage("File does not exist: " + sentencesFile.getAbsolutePath());
-			return null;
-		}
-
-		String str = null;
-		try {
-			str = readFileAsString(fileName);
-		} catch (IOException e) {
-			showException(e);
-		}
-
-		return str;
 	}
 
 
@@ -298,25 +238,6 @@ public class MobileApe extends Activity {
 
 	private void showException(Exception e) {
 		Toast.makeText(MobileApe.this, e.getMessage(), Toast.LENGTH_LONG).show();
-	}
-
-
-	/**
-	 * 
-	 * @param filePath
-	 * @return
-	 * @throws java.io.IOException
-	 */
-	private static String readFileAsString(String filePath) throws java.io.IOException {
-		byte[] buffer = new byte[(int) new File(filePath).length()];
-		BufferedInputStream f = null;
-		try {
-			f = new BufferedInputStream(new FileInputStream(filePath));
-			f.read(buffer);
-		} finally {
-			if (f != null) try { f.close(); } catch (IOException ignored) { }
-		}
-		return new String(buffer);
 	}
 
 
@@ -346,6 +267,11 @@ public class MobileApe extends Activity {
 		ap.setGuessingEnabled(guess);
 		ap.setURI(getString(R.string.ape_param_uri));
 		return ap.getSoloOutput(aceText, outputType);
+	}
+
+
+	private String getAboutString() {
+		return getString(R.string.app_name) + " v" + getVersionName() + " by " + getString(R.string.app_author);
 	}
 
 

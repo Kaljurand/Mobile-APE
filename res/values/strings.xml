@@ -2,6 +2,7 @@
 <resources>
 	<string name="app_name">Mobile APE</string>
 	<string name="activity_showabout_name">About</string>
+	<string name="activity_snippetlistview_name">Select snippet</string>
 	<string name="sentences_file_name">sentences.txt</string>
 	<string name="app_author">Kaarel Kaljurand</string>
 	<string name="template_user_agent" translatable="false">"%1$s/%2$s (Linux; Android)"</string>
@@ -14,8 +15,8 @@
 	<!-- Menu -->
 	<string name="parse">Parse</string>
 	<string name="example">Example</string>
-	<string name="save_text">Save</string>
-	<string name="show_texts">Show</string>
+	<string name="save_text">Save text</string>
+	<string name="show_texts">Load text</string>
 	<string name="about">About</string>
 
 	<string name="output_parameters">Output</string>	
